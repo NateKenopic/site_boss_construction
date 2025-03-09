@@ -13,11 +13,38 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import bcrypt from 'bcryptjs';
 
 export function SignupForm() {
+  const router = useRouter();
+
+  async function handleSignup(e) {
+    e.preventDefault();
+    console.log(e.target);
+ 
+    const formData = new FormData(e.target);
+    const username = formData.get('signup-username');
+    const email = formData.get('signup-email');
+    const password = await bcrypt.hash(formData.get('signup-password'), 10);
+ 
+    const response = await fetch(process.env.API_URL + 'api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    })
+ 
+    // if (response.ok) {
+    //   router.push('/home');
+    // } else {
+    //   // Handle errors
+    //   router.push('/login');
+    // }
+  }
+
   return (
     <div className="w-full max-w-md">
-      <form>
+      <form onSubmit={(e) => {handleSignup(e)}} method="post">
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-3xl font-bold">Sign Up</CardTitle>
@@ -27,36 +54,36 @@ export function SignupForm() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="signup-username">Username</Label>
               <Input
-                id="username"
-                name="username"
+                id="signup-username"
+                name="signup-username"
                 type="text"
-                placeholder="username"
+                placeholder="Username"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="signup-email">Email</Label>
               <Input
-                id="email"
-                name="email"
+                id="signup-email"
+                name="signup-email"
                 type="email"
                 placeholder="name@example.com"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="signup-password">Password</Label>
               <Input
-                id="password"
-                name="password"
+                id="signup-password"
+                name="signup-password"
                 type="password"
                 placeholder="password"
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <button className="w-full">Sign Up</button>
+            <button className="w-full" type="submit">Sign Up</button>
           </CardFooter>
         </Card>
         <div className="mt-4 text-center text-sm">

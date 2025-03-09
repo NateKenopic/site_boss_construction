@@ -18,14 +18,12 @@ const components = [
   {
     title: "Login",
     href: "/login",
-    description:
-      "Login to your account",
+    description:"Login to your account",
   },
   {
     title: "Sign Up",
     href: "/signup",
-    description:
-      "Create an account",
+    description: "Create an account",
   }
 ]
 
@@ -56,13 +54,6 @@ export function HomeNavigationMenu() {
                 ))}
               </ul>
             </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Documentation
-              </NavigationMenuLink>
-            </Link>
           </NavigationMenuItem>
         </div>
       </NavigationMenuList>

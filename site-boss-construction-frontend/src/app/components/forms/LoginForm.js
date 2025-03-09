@@ -13,11 +13,37 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import bcrypt from 'bcryptjs';
 
 export function LoginForm() {
+  const router = useRouter();
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    console.log(e.target);
+ 
+    const formData = new FormData(e.target);
+    const email = formData.get('login-email');
+    const password = await bcrypt.hash(formData.get('login-password'), 10);
+ 
+    const response = await fetch(process.env.API_URL + 'api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+ 
+    // if (response.ok) {
+    //   router.push('/home');
+    // } else {
+    //   // Handle errors
+    //   router.push('/login');
+    // }
+  }
+
   return (
     <div className="w-full max-w-md">
-      <form>
+      <form onSubmit={(e) => {handleLogin(e)}} method="post">
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-3xl font-bold">Login</CardTitle>
@@ -27,26 +53,26 @@ export function LoginForm() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="login-email">Email</Label>
               <Input
-                id="identifier"
-                name="identifier"
-                type="text"
-                placeholder="email"
+                id="login-email"
+                name="login-email"
+                type="email"
+                placeholder="Email"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="login-password">Password</Label>
               <Input
-                id="password"
-                name="password"
+                id="login-password"
+                name="login-password"
                 type="password"
-                placeholder="password"
+                placeholder="Password"
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <button className="w-full">Login</button>
+            <button className="w-full" type="submit">Login</button>
           </CardFooter>
         </Card>
         <div className="mt-4 text-center text-sm">
